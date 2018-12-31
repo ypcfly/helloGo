@@ -1,0 +1,129 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <meta name="description" content="Login - Register Template">
+    <meta name="author" content="Lorenzo Angelino aka MrLolok">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/modules/layer/default/layer.css">
+    <script src="/static/js/lay/modules/layer.js"></script>
+    <style>
+        body {
+            background-color: #303641;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container-register">
+        <div id="title">
+            <i class="material-icons lock">lock</i>注册
+        </div>
+
+        <form>
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">email</i>
+                </div>
+                <input id="email" placeholder="邮箱" type="email" autocomplete="off">
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">face</i>
+                </div>
+                <input id="username" placeholder="用户名" type="text"  autocomplete="off">
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">vpn_key</i>
+                </div>
+                <input id="password" placeholder="密码" type="password"  autocomplete="off">
+            </div>
+
+            <div class="remember-me">
+                <input id="check" type="checkbox">
+                <span style="color: #DDD">接受隐私条款</span>
+            </div>
+
+            <input id="submit" type="submit" value="注册" />
+        </form>
+
+        <div class="privacy">
+            <a href="#">隐私条款</a>
+        </div>
+
+        <div class="register">
+            已经有账户?
+            <a href="/login"><button id="register-link">登录</button></a>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    var pasReg = /^[a-zA-Z0-9]{8,16}$/;
+    var emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+    $("#submit").click(function () {
+        var username = $("#username").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var che = $("#check").is(':checked');
+        if (email == null || email == "") {
+            layer.msg('<a style="color:black">请输入电子邮箱</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (!emailReg.test(email)) {
+            layer.msg('<a style="color:black">输入的邮箱地址格式错误</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (username == null || username == "") {
+            layer.msg('<a style="color:black">请输入用户名</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (password == null || password == "") {
+            layer.msg('<a style="color:black">请输入密码</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (!pasReg.test(password)) {
+            layer.msg('<a style="color:black">密码由大小写和数字组成，长度8-16位</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (!che) {
+            layer.msg('<a style="color:black">请同意隐私条款</a>', {icon: 5,time: 2000});
+            return false;
+        }
+
+        $.ajax({
+            url:"/register/do",
+            dataType:"json",
+            type:"post",
+            data:JSON.stringify({"username":username,"password":password,"email":email}),
+            contentType:"application/json",
+            success:function(r){
+                var msg = r.message;
+                if (r.success) {
+                    layer.confirm('<a style="color:black">注册成功，去登录?</a>',
+                            {icon: 1, title:'提示信息'},
+                            function(index){window.location.href = "/login";});
+                } else {
+                    layer.msg('<a style="color:black">' + msg + '</a>', {icon: 5,time: 2000});
+                }
+            },
+            error:function (xhr) {
+                layer.alert('<a style="color:black">系统异常，请稍候重试</a>', {icon: 5,time: 2000});
+            }
+        });
+        return false;
+
+    })
+</script>

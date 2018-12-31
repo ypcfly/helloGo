@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+</head>
+<body>
+    <form action="/user/save" method="post">
+        <label>姓名：</label>
+        <input type="text" maxlength="10" placeholder="请输入姓名" name="username">
+        <br>
+        <label>性别：</label>
+        <select name="sex">
+            <option>请选择</option>
+            <option value="male">男</option>
+            <option value="female">女</option>
+        </select>
+        <br>
+        <label>年龄：</label>
+        <input type="text" maxlength="3" placeholder="请输入年龄" name="age" >
+        <br>
+        <label>手机：</label>
+        <input type="text" maxlength="11" placeholder="请输入手机号码" name="mobile">
+        <br>
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>

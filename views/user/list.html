@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表页</title>
+</head>
+<body>
+    <form>
+    {{range .List}}
+        <label>姓名：</label>
+        <input type="text" readonly name="name" value="{{.UserName}}">
+        <br>
+        <label>性别：</label>
+        <input type="text" readonly name="gender" value="{{.Sex}}">
+        <br>
+        <label>年龄：</label>
+        <input type="text" readonly name="name" value="{{.Age}}">
+        <br>
+        <label>手机：</label>
+        <input type="number" readonly name="mobile" value="{{.Mobile}}">
+        <br>
+    {{end}}
+    </form>
+</body>
+</html>

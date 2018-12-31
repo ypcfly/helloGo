@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户详情页</title>
+</head>
+<body>
+    <form id="detail">
+    {{$user := .User}}
+        <label>姓名：</label>
+        <input type="text" readonly name="name" value="{{$user.UserName}}">
+        <br>
+        <label>性别：</label>
+        <input type="text" readonly name="gender" value="{{$user.Sex}}">
+        <br>
+        <label>年龄：</label>
+        <input type="text" readonly name="name" value="{{$user.Age}}">
+        <br>
+        <label>手机：</label>
+        <input type="number" readonly name="mobile" value="{{$user.Mobile}}">
+        <br>
+    </form>
+
+</body>
+</html>

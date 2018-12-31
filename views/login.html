@@ -1,0 +1,103 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <meta name="description" content="Login - Register Template">
+    <meta name="author" content="Lorenzo Angelino aka MrLolok">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/modules/layer/default/layer.css">
+    {{/*<link rel="stylesheet" href="/static/css/layui.css">*/}}
+    {{/*<script src="/static/js/layui.js"></script>*/}}
+    <script src="/static/js/lay/modules/layer.js"></script>
+    <style>
+        body {
+            background-color: #303641;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container-login">
+        <div id="title">
+            <i class="material-icons lock">lock</i>登录
+        </div>
+
+        <form action="/login/do" method="post">
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">face</i>
+                </div>
+                <input id="username" name="username" placeholder="用户名" type="text"  autocomplete="off">
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">vpn_key</i>
+                </div>
+                <input id="password" name="password" placeholder="密码" type="password" autocomplete="off">
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox">
+                <span style="color: #DDD">记住我</span>
+            </div>
+
+            <input id="btn" type="submit" value="登录" />
+        </form>
+
+        <div class="forgot-password">
+            <a href="#">忘记密码?</a>
+        </div>
+        <div class="privacy">
+            <a href="#">隐私条款</a>
+        </div>
+
+        <div class="register">
+            还没有注册帐号?
+            <a href="/register"><button id="register-link">注册</button></a>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+
+    $("#btn").click(function () {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        if (username == null || username == "") {
+            layer.msg('<a style="color:black">请输入用户名</a>', {icon: 5,time: 2000});
+            return false;
+        }
+        if (password == null || password == "") {
+            layer.msg('<a style="color:black">请输入密码</a>', {icon: 5,time: 2000});
+        }
+
+        $.ajax({
+            url:"/login/do",
+            dataType:"json",
+            type:"post",
+            data:JSON.stringify({"username":username,"password":password}),
+            contentType:"application/json",
+            success:function(r){
+                var msg = r.message;
+                if (r.success) {
+                    window.location.href = "/user/info";
+                } else {
+                    layer.msg('<a style="color:black">' + msg + '</a>', {icon: 5,time: 2000});
+                    return false;
+                }
+            },
+            error:function (xhr) {
+                layer.alert('系统异常！请稍候重试', {icon: 5,time: 2000});
+            }
+        });
+    })
+</script>
