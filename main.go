@@ -8,30 +8,22 @@ import (
 	_ "hello/routers"
 )
 
-
 func main() {
-	// 数据库初始化
-	models.Init()
 
 	// 过滤器
-	//beego.InsertFilter("/*",beego.BeforeExec,controllers.UserFilter)
+	beego.InsertFilter("/*", beego.BeforeExec, controllers.BeforeExecFilter)
+	beego.InsertFilter("/*", beego.BeforeRouter, controllers.BeforeRouterFilter)
+	beego.InsertFilter("/*", beego.BeforeStatic, controllers.BeforeStaticFilter)
+	beego.InsertFilter("/*", beego.AfterExec, controllers.AfterExecFilter)
+	beego.InsertFilter("/*", beego.FinishRouter, controllers.FinishRouterFilter)
 
-	// 错误handler
+	// run方法前注册错误handler
 	beego.ErrorController(&controllers.ErrorController{})
+
 	beego.Run()
-
-
 }
 
-
-//func init() {
-//	// set default database
-//	username := beego.AppConfig.String("username")
-//	password := beego.AppConfig.String("password")
-//	url := beego.AppConfig.String("url")
-//	dbname := beego.AppConfig.String("dbname")
-//
-//	orm.RegisterDataBase("default", "postgres", "postgres://" + username + ":" + password + "@" + url + "/" + dbname + "?sslmode=disable", 30)
-//}
-
-
+func init() {
+	// 数据库初始化
+	models.Init()
+}

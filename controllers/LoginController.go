@@ -17,10 +17,10 @@ type LoginController struct {
 }
 
 func (c *LoginController) URLMapping() {
-	c.Mapping("/login",c.Login)
-	c.Mapping("/register",c.Register)
-	c.Mapping("/register/do",c.DoRegister)
-	c.Mapping("/login/do",c.DoLogin)
+	c.Mapping("/login", c.Login)
+	c.Mapping("/register", c.Register)
+	c.Mapping("/register/do", c.DoRegister)
+	c.Mapping("/login/do", c.DoLogin)
 
 }
 
@@ -37,11 +37,12 @@ func (c *LoginController) Register() {
 
 	c.TplName = "register.html"
 }
+
 // @router /register/do [post]
 func (c *LoginController) DoRegister() {
 	var user models.User
 	var result models.Result
-	err := json.Unmarshal(c.Ctx.Input.RequestBody,&user)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &user)
 	checkError(err)
 
 	userName := user.UserName
@@ -49,7 +50,7 @@ func (c *LoginController) DoRegister() {
 	email := user.Email
 	logs.Info(">>>> user register information username=" + userName + ",email=" + email + ",password=" + password + " <<<<")
 
-	pass,err := regexp.MatchString(`[a-zA-Z0-9]{8,16}`,password)
+	pass, err := regexp.MatchString(`[a-zA-Z0-9]{8,16}`, password)
 	checkError(err)
 	if !pass {
 		result.Code = 404
@@ -57,7 +58,7 @@ func (c *LoginController) DoRegister() {
 		result.Message = "密码格式错误"
 	}
 
-	em,err := regexp.MatchString(`^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$`,email)
+	em, err := regexp.MatchString(`^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$`, email)
 	checkError(err)
 	if !em {
 		result.Code = 404
@@ -67,20 +68,20 @@ func (c *LoginController) DoRegister() {
 	// 对密码加密
 	user.Password = passwordEncode(password)
 
-	id,e := orm.NewOrm().Insert(&user)
+	id, e := orm.NewOrm().Insert(&user)
 	if e != nil {
 		result.Code = 404
 		result.Success = false
 		result.Message = "系统异常"
 		logs.Error(e)
 	} else {
-		logs.Info(">>>> user register success,user id = " + strconv.FormatInt(id,10) + " <<<<")
+		logs.Info(">>>> user register success,user id = " + strconv.FormatInt(id, 10) + " <<<<")
 		result.Code = 200
 		result.Success = true
 		result.Message = "注册成功"
 	}
 
-	bytes,err := json.Marshal(&result)
+	bytes, err := json.Marshal(&result)
 	c.Ctx.ResponseWriter.Write(bytes)
 }
 func passwordEncode(password string) string {
@@ -89,18 +90,17 @@ func passwordEncode(password string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-
 // @router /login/do  [post]
 func (c *LoginController) DoLogin() {
 	logs.Info(">>>> user do login start <<<<")
 	var user models.User
 	// 表单映射成struct
-	err := json.Unmarshal(c.Ctx.Input.RequestBody,&user)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &user)
 	logs.Error(err)
 
 	user.Password = passwordEncode(user.Password)
 
-	right := models.QueryByNamePwd(user.UserName,user.Password)
+	right := models.QueryByNamePwd(user.UserName, user.Password)
 
 	var r models.Result
 	if right {
@@ -113,8 +113,7 @@ func (c *LoginController) DoLogin() {
 		r.Success = false
 		r.Message = "用户或密码错误"
 	}
-
-	bytes,err := json.Marshal(&r)
+	// session添加用户信息
+	bytes, err := json.Marshal(&r)
 	c.Ctx.ResponseWriter.Write(bytes)
 }
-
