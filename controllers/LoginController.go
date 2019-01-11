@@ -27,7 +27,6 @@ func (c *LoginController) URLMapping() {
 // @router /login  [get]
 func (c *LoginController) Login() {
 	logs.Info(">>>> forward to login page start <<<<")
-
 	c.TplName = "login.html"
 }
 

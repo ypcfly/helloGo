@@ -18,7 +18,7 @@ func BeforeRouterFilter(ctx *context.Context) {
 // 第一个执行
 func BeforeStaticFilter(ctx *context.Context) {
 	logs.Info(">>>> BeforeStatic filter start <<<<")
-	ctx.Input.Session("name")
+	// session没有初始化
 }
 
 func AfterExecFilter(ctx *context.Context) {
