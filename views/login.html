@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>用户登陆页</title>
     <meta name="description" content="Login - Register Template">
     <meta name="author" content="Lorenzo Angelino aka MrLolok">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,6 +70,7 @@
 <script>
 
     $("#btn").click(function () {
+        $("#btn").addClass("clicked");
         var username = $("#username").val();
         var password = $("#password").val();
         if (username == null || username == "") {
@@ -79,25 +80,31 @@
         if (password == null || password == "") {
             layer.msg('<a style="color:black">请输入密码</a>', {icon: 5,time: 2000});
         }
-
-        $.ajax({
-            url:"/login/do",
-            dataType:"json",
-            type:"post",
-            data:JSON.stringify({"username":username,"password":password}),
-            contentType:"application/json",
-            success:function(r){
-                var msg = r.message;
-                if (r.success) {
-                    window.location.href = "/user/info";
-                } else {
-                    layer.msg('<a style="color:black">' + msg + '</a>', {icon: 5,time: 2000});
-                    return false;
+        var clicked =  $("#btn").hasClass("clicked");
+        if (clicked) {
+            $.ajax({
+                url:"/login/do",
+                dataType:"json",
+                type:"post",
+                data:JSON.stringify({"username":username,"password":password}),
+                contentType:"application/json",
+                success:function(r){
+                    $("#btn").removeClass("clicked");
+                    var msg = r.message;
+                    if (r.success) {
+                        window.location.href = "/user/list";
+                    } else {
+                        layer.msg('<a style="color:black">' + msg + '</a>', {icon: 5,time: 2000});
+                        // return false;
+                    }
+                },
+                error:function (xhr) {
+                    $("#btn").removeClass("clicked");
+                    layer.alert('系统异常！请稍候重试', {icon: 5,time: 2000});
                 }
-            },
-            error:function (xhr) {
-                layer.alert('系统异常！请稍候重试', {icon: 5,time: 2000});
-            }
-        });
+            });
+        }
+
+
     })
 </script>

@@ -95,7 +95,6 @@ func (c *LoginController) DoLogin() {
 	var user models.User
 	// 表单映射成struct
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &user)
-	logs.Error(err)
 
 	user.Password = passwordEncode(user.Password)
 
@@ -103,7 +102,6 @@ func (c *LoginController) DoLogin() {
 
 	var r models.Result
 	if right {
-		// 用户名和密码正确
 		r.Code = 200
 		r.Success = true
 		r.Message = "success"
@@ -112,7 +110,13 @@ func (c *LoginController) DoLogin() {
 		r.Success = false
 		r.Message = "用户或密码错误"
 	}
-	// session添加用户信息
-	bytes, err := json.Marshal(&r)
+	//c.ServeJSON()
+	//c.Data["json"] = &r
+	// 或者使用这种方式
+	var bytes []byte
+	bytes, err = json.Marshal(&r)
+	if err != nil {
+		logs.Error(err)
+	}
 	c.Ctx.ResponseWriter.Write(bytes)
 }
