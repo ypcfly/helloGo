@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	Id       int    `form:"-" table:"user" json:"id"`
+	Id       int    `form:"-" json:"id"`
 	UserName string `form:"username"  orm:"column(username)" json:"userName"`
 	Age      int    `form:"age" json:"age"`
 	Sex      string `form:"sex" json:"sex"`
